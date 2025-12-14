@@ -1,23 +1,20 @@
 import { useEffect, useState } from "react";
-import type { Recipe } from "../../../utils";
-import Card from "../../Card/card";
+import type { Category } from "../../../utils";
+import CardCtgry from "../../Card/CardCtgry/cardCategory";
 
 export default function HomeRecipes() {
-  const [recipes, setRecipes] = useState<Recipe[] | []>([]);
-  const [page, setPage] = useState(1);
-  const pageSize = 18;
-
+  const [category, setCategory] = useState<Category[] | []>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchRecipes = async () => {
+    const fetchCtgry = async () => {
       try {
         const response = await fetch(
-          `https://www.themealdb.com/api/json/v1/1/search.php?f=p`
+          `https://www.themealdb.com/api/json/v1/1/categories.php`
         );
         const data = await response.json();
-        setRecipes(data.meals ?? []);
+        setCategory(data.categories ?? []);
       } catch {
         setError("Whoops, something went wrong!");
       } finally {
@@ -25,15 +22,8 @@ export default function HomeRecipes() {
       }
     };
 
-    fetchRecipes();
-  }, [page]);
-
-  const paginatedRecipes = recipes.slice(
-    (page - 1) * pageSize,
-    page * pageSize
-  );
-
-  const totalPages = Math.ceil(recipes.length / pageSize);
+    fetchCtgry();
+  }, []);
 
   return (
     <>
@@ -44,26 +34,9 @@ export default function HomeRecipes() {
       {!isLoading && (
         <>
           <div className="recipes-grid">
-            {paginatedRecipes.map((r) => (
-              <Card key={r.idMeal} recipe={r} />
+            {category.map((c) => (
+              <CardCtgry key={c.idCategory} category={c} />
             ))}
-          </div>
-
-          <div className="recipes-buttons">
-            <button disabled={page === 1} onClick={() => setPage((p) => p - 1)}>
-              Previous
-            </button>
-
-            <span>
-              Page {page} of {totalPages}
-            </span>
-
-            <button
-              disabled={page === totalPages}
-              onClick={() => setPage((p) => p + 1)}
-            >
-              Next
-            </button>
           </div>
         </>
       )}

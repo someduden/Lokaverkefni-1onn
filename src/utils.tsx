@@ -52,3 +52,10 @@ export type Recipe = {
   strCreativeCommonsConfirmed: string | null;
   dateModified: string | null;
 };
+
+export type Category = {
+  idCategory: number;
+  strCategory: string;
+  strCategoryThumb: string;
+  strCategoryDescription: string;
+};

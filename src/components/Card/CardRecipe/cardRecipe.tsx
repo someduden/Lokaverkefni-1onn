@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
 import "./style.css";
-import type { Recipe } from "../../utils";
+import type { Recipe } from "../../../utils";
 
-export default function Card({ recipe }: { recipe: Recipe }) {
+export default function CardRecipe({ recipe }: { recipe: Recipe }) {
   return (
     <Link to={`/homepage/${recipe.idMeal}`} className="card">
       <div className="card-image-wrapper">
