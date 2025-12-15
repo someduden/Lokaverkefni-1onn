@@ -13,7 +13,7 @@ export default function CardCtgry({ category }: { category: Category }) {
         />
       </div>
 
-      <div>
+      <div className="card-content">
         <h3 className="card-title">{category.strCategory}</h3>
         <p className="card-categ">{category.strCategoryDescription}</p>
       </div>

@@ -1,6 +1,38 @@
+/* HEADER */
+
+header,
+footer {
+  background-color: rgba(0, 0, 0, 0.5);
+  color: black;
+  width: 100%;
+}
+
+nav {
+  display: flex;
+  gap: 16px;
+  padding: 16px 24px;
+}
+
+header nav a {
+  color: #000000;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+header nav a:hover {
+  color: #e67e22;
+}
+
+header nav a:active {
+  color: #d35400;
+}
+
+/* MAIN */
+
 main {
   width: 100%;
   flex: 1;
+  background-color: rgba(0, 0, 0, 0.4);
 }
 
 .layout {
@@ -10,14 +42,4 @@ main {
   flex-direction: column;
 }
 
-header,
-footer {
-  background-color: lightsteelblue;
-  width: 100%;
-}
-
-nav {
-  display: flex;
-  gap: 16px;
-  padding: 16px 24px;
-}
+/* FOOTER */

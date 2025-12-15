@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import type { Category } from "../../../utils";
+import "./style.css";
 import CardCtgry from "../../Card/CardCtgry/cardCategory";
 
 export default function HomeRecipes() {
@@ -27,13 +28,13 @@ export default function HomeRecipes() {
 
   return (
     <>
-      <h1>Popular Recipes</h1>
+      <h2 className="home-descriptor">Recipe Categories</h2>
 
       {isLoading && <p>Hleð uppskriftum...</p>}
 
       {!isLoading && (
         <>
-          <div className="recipes-grid">
+          <div className="categ-grid">
             {category.map((c) => (
               <CardCtgry key={c.idCategory} category={c} />
             ))}
