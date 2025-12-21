@@ -8,7 +8,7 @@ export default function Layout({ children }: { children: ReactNode }) {
       <header>
         <nav>
           <Link to="/">Heimasíða</Link>
-          <Link to="/homepage">Allar uppskriftir</Link>
+          <Link to="/recipes">Allar uppskriftir</Link>
         </nav>
       </header>
       <main>{children}</main>

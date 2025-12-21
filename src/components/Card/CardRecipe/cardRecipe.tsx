@@ -4,7 +4,7 @@ import type { Recipe } from "../../../utils";
 
 export default function CardRecipe({ recipe }: { recipe: Recipe }) {
   return (
-    <Link to={`/homepage/${recipe.idMeal}`} className="card">
+    <Link to={`/recipes/${recipe.idMeal}`} className="card">
       <div className="card-image-wrapper">
         <img
           src={`${recipe.strMealThumb}/preview`}

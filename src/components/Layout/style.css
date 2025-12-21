@@ -1,4 +1,8 @@
-/* HEADER */
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
 
 header,
 footer {
@@ -27,19 +31,19 @@ header nav a:active {
   color: #d35400;
 }
 
-/* MAIN */
-
-main {
-  width: 100%;
-  flex: 1;
-  background-color: rgba(0, 0, 0, 0.4);
-}
-
 .layout {
   min-height: 100vh;
-  width: 100%;
   display: flex;
   flex-direction: column;
 }
 
-/* FOOTER */
+main {
+  flex: 1;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
