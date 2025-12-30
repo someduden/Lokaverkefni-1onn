@@ -7,13 +7,13 @@ export default function Layout({ children }: { children: ReactNode }) {
     <div className="layout">
       <header>
         <nav>
-          <Link to="/">Heimasíða</Link>
-          <Link to="/recipes">Allar uppskriftir</Link>
+          <Link to="/">Homepage</Link>
+          <Link to="/recipes">All Recipes</Link>
         </nav>
       </header>
       <main>{children}</main>
       <footer>
-        <p>Uppskriftir fyrir mig</p>
+        <p>Recipes for me</p>
       </footer>
     </div>
   );

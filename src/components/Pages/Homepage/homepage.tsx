@@ -30,7 +30,7 @@ export default function HomeRecipes() {
     <>
       <h2 className="home-descriptor">Recipe Categories</h2>
 
-      {isLoading && <p>Hleð uppskriftum...</p>}
+      {isLoading && <p>Loading recipes...</p>}
 
       {!isLoading && (
         <>

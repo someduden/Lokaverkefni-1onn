@@ -35,9 +35,9 @@ export default function AllRecipes() {
 
   return (
     <>
-      <h2 className="descriptor">Allar Uppskriftir</h2>
+      <h2 className="descriptor">All Recipes</h2>
 
-      {isLoading && <p>Hleð uppskriftum...</p>}
+      {isLoading && <p>Loading recipes...</p>}
 
       {!isLoading && (
         <>
