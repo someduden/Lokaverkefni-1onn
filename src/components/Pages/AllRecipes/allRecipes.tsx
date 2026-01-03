@@ -65,14 +65,6 @@ export default function AllRecipes() {
   const indexOfFirst = indexOfLast - recipesPerPage;
   const currentRecipes = filteredRecipes.slice(indexOfFirst, indexOfLast);
 
-  const toggleCategory = (category: string) => {
-    setSelectedCategories((prev) =>
-      prev.includes(category)
-        ? prev.filter((c) => c !== category)
-        : [...prev, category]
-    );
-  };
-
   return (
     <section className="main">
       {/* LEFT COLUMN */}
