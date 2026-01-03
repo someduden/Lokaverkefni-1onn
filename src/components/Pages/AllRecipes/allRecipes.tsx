@@ -3,10 +3,16 @@ import type { Recipe } from "../../../utils";
 import "./style.css";
 import CardRecipe from "../../Card/CardRecipe/cardRecipe";
 
+const recipesPerPage = 10;
+
 export default function AllRecipes() {
   const [recipes, setRecipes] = useState<Recipe[] | []>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
 
   useEffect(() => {
     const fetchAllRecipes = async () => {
@@ -22,6 +28,7 @@ export default function AllRecipes() {
         const results = await Promise.all(requests);
 
         const allMeals = results.flatMap((result) => result.meals ?? []);
+
         setRecipes(allMeals);
       } catch {
         setError("Whoopsy daisy!");
@@ -33,23 +40,122 @@ export default function AllRecipes() {
     fetchAllRecipes();
   }, []);
 
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm]);
+
+  const categories = Array.from(
+    new Set(recipes.map((r) => r.strCategory).filter(Boolean))
+  );
+
+  const filteredRecipes = recipes.filter((recipe) => {
+    const matchesSearch = recipe.strMeal
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
+
+    const matchesCategory =
+      selectedCategories.length === 0 ||
+      selectedCategories.includes(recipe.strCategory);
+
+    return matchesSearch && matchesCategory;
+  });
+
+  const totalPages = Math.ceil(filteredRecipes.length / recipesPerPage);
+  const indexOfLast = currentPage * recipesPerPage;
+  const indexOfFirst = indexOfLast - recipesPerPage;
+  const currentRecipes = filteredRecipes.slice(indexOfFirst, indexOfLast);
+
+  const toggleCategory = (category: string) => {
+    setSelectedCategories((prev) =>
+      prev.includes(category)
+        ? prev.filter((c) => c !== category)
+        : [...prev, category]
+    );
+  };
+
   return (
-    <>
-      <h2 className="descriptor">All Recipes</h2>
+    <section className="main">
+      {/* LEFT COLUMN */}
+      <section className="content">
+        <h2 className="descriptor">All Recipes</h2>
 
-      {isLoading && <p>Loading recipes...</p>}
+        <input
+          type="text"
+          placeholder="Search recipes..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="search-input"
+        />
 
-      {!isLoading && (
-        <>
-          <div className="recipe-grid">
-            {recipes.map((r) => (
-              <CardRecipe key={r.idMeal} recipe={r} />
+        {isLoading && <p>Loading recipes...</p>}
+
+        {!isLoading && !error && (
+          <>
+            <div className="recipe-grid">
+              {currentRecipes.length > 0 ? (
+                currentRecipes.map((r) => (
+                  <CardRecipe key={r.idMeal} recipe={r} />
+                ))
+              ) : (
+                <p>No recipes found</p>
+              )}
+            </div>
+
+            <div className="pagination">
+              <button
+                disabled={currentPage === 1}
+                onClick={() => setCurrentPage((p) => p - 1)}
+              >
+                Prev
+              </button>
+
+              <span>
+                Page {currentPage} of {totalPages}
+              </span>
+
+              <button
+                disabled={currentPage === totalPages}
+                onClick={() => setCurrentPage((p) => p + 1)}
+              >
+                Next
+              </button>
+            </div>
+          </>
+        )}
+
+        {error && <div>{error}</div>}
+      </section>
+
+      {/* RIGHT COLUMN */}
+      <aside className="sidebar">
+        <div className="category-filter">
+          <label htmlFor="category-select">Filter by category</label>
+
+          <select
+            id="category-select"
+            multiple
+            value={selectedCategories}
+            onChange={(e) => {
+              const values = Array.from(
+                e.target.selectedOptions,
+                (option) => option.value
+              );
+              setSelectedCategories(values);
+            }}
+            className="category-select"
+          >
+            {categories.map((category) => (
+              <option key={category} value={category}>
+                {category}
+              </option>
             ))}
-          </div>
-        </>
-      )}
+          </select>
 
-      {error && <div>{error}</div>}
-    </>
+          <button onClick={() => setSelectedCategories([])}>
+            Clear categories
+          </button>
+        </div>
+      </aside>
+    </section>
   );
 }
