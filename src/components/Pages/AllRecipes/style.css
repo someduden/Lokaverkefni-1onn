@@ -1,4 +1,4 @@
-.main {
+.wrapper {
   display: grid;
   grid-template-columns: 1fr 280px;
   gap: 1.5rem;

@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import type { Recipe } from "../../../utils";
 import "./style.css";
-import CardRecipe from "../../Card/CardRecipe/cardRecipe";
+import CardRecipe from "../../CardRecipe/cardRecipe";
 
-const recipesPerPage = 10;
+const recipesPerPage = 15;
 
 export default function AllRecipes() {
   const [recipes, setRecipes] = useState<Recipe[] | []>([]);
@@ -30,8 +30,8 @@ export default function AllRecipes() {
         const allMeals = results.flatMap((result) => result.meals ?? []);
 
         setRecipes(allMeals);
-      } catch {
-        setError("Whoopsy daisy!");
+      } catch (err) {
+        setError(error);
       } finally {
         setIsLoading(false);
       }
@@ -65,8 +65,11 @@ export default function AllRecipes() {
   const indexOfFirst = indexOfLast - recipesPerPage;
   const currentRecipes = filteredRecipes.slice(indexOfFirst, indexOfLast);
 
+  if (isLoading) return <p>Loading recipes...</p>;
+  if (error) return <p>{error}</p>;
+
   return (
-    <section className="main">
+    <section className="wrapper">
       {/* LEFT COLUMN */}
       <section className="content">
         <h2 className="descriptor">All Recipes</h2>
@@ -79,43 +82,33 @@ export default function AllRecipes() {
           className="search-input"
         />
 
-        {isLoading && <p>Loading recipes...</p>}
+        <div className="recipe-grid">
+          {currentRecipes.length > 0 ? (
+            currentRecipes.map((r) => <CardRecipe key={r.idMeal} recipe={r} />)
+          ) : (
+            <p>No recipes found</p>
+          )}
+        </div>
 
-        {!isLoading && !error && (
-          <>
-            <div className="recipe-grid">
-              {currentRecipes.length > 0 ? (
-                currentRecipes.map((r) => (
-                  <CardRecipe key={r.idMeal} recipe={r} />
-                ))
-              ) : (
-                <p>No recipes found</p>
-              )}
-            </div>
+        <div className="pagination">
+          <button
+            disabled={currentPage === 1}
+            onClick={() => setCurrentPage((p) => p - 1)}
+          >
+            Prev
+          </button>
 
-            <div className="pagination">
-              <button
-                disabled={currentPage === 1}
-                onClick={() => setCurrentPage((p) => p - 1)}
-              >
-                Prev
-              </button>
+          <span>
+            Page {currentPage} of {totalPages}
+          </span>
 
-              <span>
-                Page {currentPage} of {totalPages}
-              </span>
-
-              <button
-                disabled={currentPage === totalPages}
-                onClick={() => setCurrentPage((p) => p + 1)}
-              >
-                Next
-              </button>
-            </div>
-          </>
-        )}
-
-        {error && <div>{error}</div>}
+          <button
+            disabled={currentPage === totalPages}
+            onClick={() => setCurrentPage((p) => p + 1)}
+          >
+            Next
+          </button>
+        </div>
       </section>
 
       {/* RIGHT COLUMN */}
