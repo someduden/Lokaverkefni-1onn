@@ -10,3 +10,18 @@
   color: black;
   padding-left: 20px;
 }
+
+.popular-recipe-wrapper {
+  border-bottom: 2px solid rgb(70, 70, 70);
+}
+
+/* JOKE */
+
+.hp-joke {
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 14px;
+  position: absolute;
+  bottom: 75px;
+  left: 20px;
+}

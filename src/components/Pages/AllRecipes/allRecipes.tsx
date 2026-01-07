@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import type { Recipe } from "../../../utils";
 import "./style.css";
 import CardRecipe from "../../CardRecipe/cardRecipe";
+import ErrorState from "../../ErrorState/errorState";
 
 const recipesPerPage = 15;
 
@@ -9,6 +10,7 @@ export default function AllRecipes() {
   const [recipes, setRecipes] = useState<Recipe[] | []>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [retry, setRetry] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -30,15 +32,15 @@ export default function AllRecipes() {
         const allMeals = results.flatMap((result) => result.meals ?? []);
 
         setRecipes(allMeals);
-      } catch (err) {
-        setError(error);
+      } catch {
+        setError("Failed to load recipes");
       } finally {
         setIsLoading(false);
       }
     };
 
     fetchAllRecipes();
-  }, []);
+  }, [retry]);
 
   useEffect(() => {
     setCurrentPage(1);
@@ -66,7 +68,18 @@ export default function AllRecipes() {
   const currentRecipes = filteredRecipes.slice(indexOfFirst, indexOfLast);
 
   if (isLoading) return <p>Loading recipes...</p>;
-  if (error) return <p>{error}</p>;
+  if (error) {
+    return (
+      <ErrorState
+        message={error}
+        onRetry={() => {
+          setError(null);
+          setIsLoading(true);
+          setRetry((r) => r + 1);
+        }}
+      />
+    );
+  }
 
   return (
     <section className="wrapper">

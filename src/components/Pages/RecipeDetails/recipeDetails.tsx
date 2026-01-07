@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import type { Recipe } from "../../../utils";
 import "./style.css";
+import ErrorState from "../../ErrorState/errorState";
 
 function getIngredients(recipe: Recipe) {
   const ingredients: { ingredient: string; measure: string }[] = [];
@@ -23,12 +24,17 @@ function getIngredients(recipe: Recipe) {
 
 export default function RecipeDetails() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [recipe, setRecipe] = useState<Recipe | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [retry, setRetry] = useState(0);
 
   useEffect(() => {
-    if (!id) return;
+    if (!id) {
+      navigate("/404", { replace: true });
+      return;
+    }
 
     const fetchRecipe = async () => {
       try {
@@ -36,20 +42,38 @@ export default function RecipeDetails() {
           `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`
         );
         const data = await res.json();
+
+        if (!data.meals) {
+          navigate("/404", { replace: true });
+          return;
+        }
+
         setRecipe(data.meals?.[0] ?? null);
       } catch {
-        setError("Shiiiiiit");
+        setError("Failed to load recipe");
       } finally {
         setIsLoading(false);
       }
     };
 
     fetchRecipe();
-  }, [id]);
+  }, [id, retry, navigate]);
 
   if (isLoading) return <p>Loading recipes...</p>;
-  if (error) return <p>{error}</p>;
-  if (!recipe) return <p>Recipe was not found!</p>;
+  if (error) {
+    return (
+      <ErrorState
+        message={error}
+        onRetry={() => {
+          setError(null);
+          setRecipe(null);
+          setIsLoading(true);
+          setRetry((r) => r + 1);
+        }}
+      />
+    );
+  }
+  if (!recipe) return null;
 
   const ingredients = getIngredients(recipe);
 
@@ -79,7 +103,7 @@ export default function RecipeDetails() {
       <h3>Instructions</h3>
       <p className="recipe-instructions">{recipe.strInstructions}</p>
 
-      <button className="back-button" onClick={() => window.history.back()}>
+      <button className="back-button" onClick={() => navigate(-1)}>
         Back
       </button>
     </section>
