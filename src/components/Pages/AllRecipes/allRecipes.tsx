@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import type { Recipe } from "../../../utils";
+import type { Recipe } from "../../../utilities/utils";
 import "./style.css";
-import CardRecipe from "../../CardRecipe/cardRecipe";
+import CardRecipe from "../../RecipeCard/cardRecipe";
 import ErrorState from "../../ErrorState/errorState";
 
 const recipesPerPage = 15;
@@ -15,6 +15,7 @@ export default function AllRecipes() {
 
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [selectedCountry, setSelectedCountry] = useState<string[]>([]);
 
   useEffect(() => {
     const fetchAllRecipes = async () => {
@@ -44,10 +45,15 @@ export default function AllRecipes() {
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchTerm]);
+  }, [searchTerm, selectedCategories, selectedCountry]);
 
+  // FILTERING
   const categories = Array.from(
     new Set(recipes.map((r) => r.strCategory).filter(Boolean))
+  );
+
+  const countries = Array.from(
+    new Set(recipes.map((r) => r.strArea).filter(Boolean))
   );
 
   const filteredRecipes = recipes.filter((recipe) => {
@@ -59,7 +65,10 @@ export default function AllRecipes() {
       selectedCategories.length === 0 ||
       selectedCategories.includes(recipe.strCategory);
 
-    return matchesSearch && matchesCategory;
+    const matchesCountry =
+      selectedCountry.length === 0 || selectedCountry.includes(recipe.strArea);
+
+    return matchesSearch && matchesCategory && matchesCountry;
   });
 
   const totalPages = Math.ceil(filteredRecipes.length / recipesPerPage);
@@ -67,7 +76,6 @@ export default function AllRecipes() {
   const indexOfFirst = indexOfLast - recipesPerPage;
   const currentRecipes = filteredRecipes.slice(indexOfFirst, indexOfLast);
 
-  if (isLoading) return <p>Loading recipes...</p>;
   if (error) {
     return (
       <ErrorState
@@ -80,20 +88,13 @@ export default function AllRecipes() {
       />
     );
   }
+  if (isLoading) return <p>Loading recipes...</p>;
 
   return (
     <section className="wrapper">
       {/* LEFT COLUMN */}
       <section className="content">
         <h2 className="descriptor">All Recipes</h2>
-
-        <input
-          type="text"
-          placeholder="Search recipes..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="search-input"
-        />
 
         <div className="recipe-grid">
           {currentRecipes.length > 0 ? (
@@ -126,6 +127,17 @@ export default function AllRecipes() {
 
       {/* RIGHT COLUMN */}
       <aside className="sidebar">
+        <div className="search-bar">
+          <label htmlFor="search-bar">Search for recipes</label>
+          <input
+            type="text"
+            placeholder="Search recipes..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="search-input"
+          />
+        </div>
+
         <div className="category-filter">
           <label htmlFor="category-select">Filter by category</label>
 
@@ -148,10 +160,34 @@ export default function AllRecipes() {
               </option>
             ))}
           </select>
-
           <button onClick={() => setSelectedCategories([])}>
             Clear categories
           </button>
+        </div>
+
+        <div className="country-filter">
+          <label htmlFor="country-select">Filter by country</label>
+
+          <select
+            id="country-select"
+            multiple
+            value={selectedCountry}
+            onChange={(e) => {
+              const values = Array.from(
+                e.target.selectedOptions,
+                (option) => option.value
+              );
+              setSelectedCountry(values);
+            }}
+            className="country-select"
+          >
+            {countries.map((country) => (
+              <option key={country} value={country}>
+                {country}
+              </option>
+            ))}
+          </select>
+          <button onClick={() => setSelectedCountry([])}>Clear country</button>
         </div>
       </aside>
     </section>

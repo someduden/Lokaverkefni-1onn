@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import type { Recipe } from "../../../utils";
+import type { Recipe } from "../../../utilities/utils";
 import "./style.css";
 import ErrorState from "../../ErrorState/errorState";
 
@@ -29,6 +29,9 @@ export default function RecipeDetails() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [retry, setRetry] = useState(0);
+
+  const [similarRecipe, setSimilarRecipe] = useState<Recipe[]>([]);
+  const [similarLoading, setSimilarLoading] = useState(false);
 
   useEffect(() => {
     if (!id) {
@@ -59,7 +62,37 @@ export default function RecipeDetails() {
     fetchRecipe();
   }, [id, retry, navigate]);
 
-  if (isLoading) return <p>Loading recipes...</p>;
+  useEffect(() => {
+    if (!recipe) return;
+
+    const fetchSimilar = async () => {
+      setSimilarLoading(true);
+
+      try {
+        const res = await fetch(
+          `https://www.themealdb.com/api/json/v1/1/filter.php?c=${encodeURIComponent(
+            recipe.strCategory
+          )}`
+        );
+
+        const data = await res.json();
+
+        const similar =
+          data.meals
+            ?.filter((m: Recipe) => m.idMeal !== recipe.idMeal)
+            .slice(0, 6) ?? [];
+
+        setSimilarRecipe(similar);
+      } catch {
+        console.error("Failed to load similar recipes");
+      } finally {
+        setSimilarLoading(false);
+      }
+    };
+
+    fetchSimilar();
+  }, [recipe]);
+
   if (error) {
     return (
       <ErrorState
@@ -73,6 +106,7 @@ export default function RecipeDetails() {
       />
     );
   }
+  if (isLoading) return <p>Loading recipes...</p>;
   if (!recipe) return null;
 
   const ingredients = getIngredients(recipe);
@@ -106,6 +140,20 @@ export default function RecipeDetails() {
       <button className="back-button" onClick={() => navigate(-1)}>
         Back
       </button>
+
+      <h3>Similar Recipes</h3>
+      <div className="recipe-grid">
+        {similarRecipe.map((r) => (
+          <div
+            key={r.idMeal}
+            className="similar-card"
+            onClick={() => navigate(`/recipes/${r.idMeal}`)}
+          >
+            <img src={r.strMealThumb} alt={r.strMeal} />
+            <p>{r.strMeal}</p>
+          </div>
+        ))}
+      </div>
     </section>
   );
 }

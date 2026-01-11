@@ -3,7 +3,6 @@
   grid-template-columns: 1fr 280px;
   gap: 1.5rem;
   align-items: start;
-  background-color: rgba(0, 0, 0, 0.4);
 }
 
 .content {
@@ -40,11 +39,16 @@
   width: 200px;
 }
 
+.search-bar {
+  padding: 5px;
+}
+
 .category-filter {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
   height: 100%;
+  padding: 5px;
 }
 
 .category-select {
@@ -53,6 +57,24 @@
   max-height: none;
   overflow-y: auto;
   padding: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.country-filter {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  height: 100%;
+  padding: 5px;
+}
+
+.country-select {
+  flex: 1;
+  min-height: 250px;
+  max-height: none;
+  overflow-y: auto;
+  padding: 0.5rem;
+  font-size: 0.9rem;
 }
 
 .pagination {

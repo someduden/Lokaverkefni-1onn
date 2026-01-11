@@ -6,15 +6,27 @@ body {
 
 header,
 footer {
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.2);
   color: black;
   width: 100%;
+}
+
+header {
+  display: flex;
+}
+
+.logo {
+  height: 60px;
+  width: auto;
+  display: block;
+  border-radius: 999px;
+  align-self: center;
 }
 
 nav {
   display: flex;
   gap: 16px;
-  padding: 16px 24px;
+  padding: 16px 4px;
 }
 
 header nav a {
@@ -40,10 +52,14 @@ header nav a:active {
 main {
   flex: 1;
   width: 100%;
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: rgba(0, 0, 0, 0.3);
 }
 
 img {
   max-width: 100%;
   display: block;
+}
+
+footer {
+  padding-left: 16px;
 }

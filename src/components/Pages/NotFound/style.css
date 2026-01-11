@@ -1,3 +1,25 @@
 .not-found {
+  display: flex;
+  flex-direction: column;
   padding-left: 20px;
+  align-items: center;
+  justify-items: center;
+}
+
+.not-found img {
+  height: 500px;
+  width: auto;
+}
+
+.not-found p {
+  font-size: large;
+}
+
+.not-found-btn {
+  background: gray;
+  border-radius: 8px;
+}
+
+.not-found-btn:hover {
+  color: #e67e22;
 }

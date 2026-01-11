@@ -6,6 +6,7 @@ export default function Layout({ children }: { children: ReactNode }) {
   return (
     <div className="layout">
       <header>
+        <img src="/src/assets/logo.png" className="logo" />
         <nav>
           <Link to="/">Homepage</Link>
           <Link to="/recipes">All Recipes</Link>
@@ -13,7 +14,7 @@ export default function Layout({ children }: { children: ReactNode }) {
       </header>
       <main>{children}</main>
       <footer>
-        <p>Recipes for me</p>
+        <p>&copy; RecipeHub 2026</p>
       </footer>
     </div>
   );

@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import "./style.css";
-import type { Recipe } from "../../utils";
+import type { Recipe } from "../../utilities/utils";
 
 export default function CardRecipe({ recipe }: { recipe: Recipe }) {
   const shortDescription =

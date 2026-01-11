@@ -59,3 +59,26 @@ export type Category = {
   strCategoryThumb: string;
   strCategoryDescription: string;
 };
+
+export function getCache<T>(key: string, ttlMs: number): T | null {
+  const raw = localStorage.getItem(key);
+  if (!raw) return null;
+
+  const { value, expiry } = JSON.parse(raw);
+  if (Date.now() > expiry) {
+    localStorage.removeItem(key);
+    return null;
+  }
+
+  return value as T;
+}
+
+export function setCache<T>(key: string, value: T, ttlMs: number) {
+  localStorage.setItem(
+    key,
+    JSON.stringify({
+      value,
+      expiry: Date.now() + ttlMs,
+    })
+  );
+}

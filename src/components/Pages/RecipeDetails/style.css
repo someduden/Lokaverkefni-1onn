@@ -66,9 +66,23 @@
   border: none;
   font-size: 0.9rem;
   cursor: pointer;
-  color: #0077cc;
+  color: #e67e22;
 }
 
 .back-button:hover {
   text-decoration: underline;
+}
+
+.similar-recipes {
+  margin-top: 3rem;
+}
+
+.similar-card {
+  cursor: pointer;
+  text-align: center;
+}
+
+.similar-card img {
+  width: 100%;
+  border-radius: 8px;
 }
