@@ -14,7 +14,7 @@ function App() {
         <Route path="/" element={<HomeRecipes />} />
         <Route path="/recipes" element={<AllRecipes />} />
         <Route path="/recipes/:id" element={<RecipeDetails />} />
-        <Route path="/404" element={<NotFound />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </Layout>
   );
